@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local database (contains real attendance data, keep it out of Git)
+instance/
+*.db
+
+# Editor / OS
+.vscode/
+.DS_Store

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Mark attendance{% endblock %}
+{% block content %}
+<h1>Mark attendance</h1>
+
+<form class="inline-form" method="get" action="{{ url_for('mark') }}">
+  <label for="date">Date</label>
+  <input id="date" name="date" type="date" value="{{ selected }}" max="{{ today }}" required data-autosubmit>
+  <button type="submit" class="secondary">Open date</button>
+</form>
+
+{% if rows %}
+  <form method="post" action="{{ url_for('mark') }}" id="mark-form" data-pending="{{ pending }}">
+    <input type="hidden" name="date" value="{{ selected }}">
+
+    {% if pending %}
+      <div class="toolbar">
+        <p class="muted">{{ pending }} of {{ rows|length }} still to mark for {{ selected }}.</p>
+        <button type="button" class="secondary" id="all-present">Set all to Present</button>
+      </div>
+    {% else %}
+      <p class="muted">Attendance for {{ selected }} is complete and locked.</p>
+    {% endif %}
+
+    <table>
+      <thead><tr><th>Student</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for r in rows %}
+          <tr>
+            <td>{{ r.name }}</td>
+            <td>
+              {% if r.status %}
+                <span class="badge {{ r.status|lower }}">{{ r.status }}</span>
+                <span class="muted small">saved</span>
+              {% else %}
+                <div class="choice">
+                  <label><input type="radio" name="status_{{ r.id }}" value="Present"> Present</label>
+                  <label><input type="radio" name="status_{{ r.id }}" value="Absent"> Absent</label>
+                </div>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if pending %}
+      <button type="submit">Save attendance</button>
+      <p class="muted small">Saved records can't be edited or deleted.</p>
+    {% endif %}
+  </form>
+{% else %}
+  <p class="empty">No students to mark. <a href="{{ url_for('index') }}">Add students first.</a></p>
+{% endif %}
+{% endblock %}

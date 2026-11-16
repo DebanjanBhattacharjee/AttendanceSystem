@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Students · Attendance{% endblock %}
+{% block content %}
+<h1>Students</h1>
+
+<form class="inline-form" method="post" action="{{ url_for('add_student') }}">
+  <label for="name">Student name</label>
+  <input id="name" name="name" type="text" maxlength="80" required autofocus>
+  <button type="submit">Add student</button>
+</form>
+
+{% if students %}
+  <p class="muted">{{ students|length }} student{{ '' if students|length == 1 else 's' }} enrolled. Names are permanent once added.</p>
+  <table>
+    <thead><tr><th>Name</th><th>Added on</th></tr></thead>
+    <tbody>
+      {% for s in students %}
+        <tr><td>{{ s.name }}</td><td>{{ s.created_at }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="empty">No students yet. Add your first student above, then mark attendance.</p>
+{% endif %}
+{% endblock %}
